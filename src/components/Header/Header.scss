@@ -1,0 +1,40 @@
+.header {
+  background: #ffffff;
+  height: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0px 22px;
+}
+
+.header__name {
+	line-height: 28px;
+	font-size: 18px;
+	color: #000000;
+	margin-bottom: 0px;
+}
+
+.header__sign_up {
+  border: 1px solid #52c41a;
+  border-radius: 5px;
+  padding: 5px 15px;
+  background: #ffffff;
+  width: 109px;
+  height: 51px;
+  line-height: 28px;
+  font-size: 18px;
+  color: #52c41a;
+}
+
+.header__sign_in {
+  border: 0px;
+  background: #ffffff;
+  width: 109px;
+  height: 51px;
+  line-height: 28px;
+  font-size: 18px;
+  color: #000000;
+  margin-right: 19px;
+}
