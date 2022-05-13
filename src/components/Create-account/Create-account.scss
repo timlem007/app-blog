@@ -1,0 +1,87 @@
+.sign-up__block {
+	background: #ffffff;
+	display: flex;
+	width: 384px;
+	// height: 599px;
+	flex-direction: column;
+	margin: 59px 0px 239px 0px;
+	align-items: center;
+	justify-content: space-between;
+	align-items: stretch;
+	padding: 48px 32px;
+	border: 1px solid #d9d9d9;
+	border-radius: 6px;
+	box-shadow:
+	0px 0.6087964177131653px 2.9332919120788574px 0px #00000005,
+	0px 1.4630224704742432px 7.049108028411865px 0px #00000007,
+	0px 2.7547414302825928px 13.272845268249512px 0px #00000009,
+	0px 4.91398811340332px 23.67648696899414px 0px #0000000b,
+	0px 22px 106px 0px #00000012,
+	0px 9.19107437133789px 44.28426742553711px 0px #0000000d;
+  }
+
+  .sign-up__block__header {
+	align-self: center;
+	font-size: 20px;
+	line-height: 28px;
+	font-weight: 500;
+	margin-bottom: 12px;
+  }
+  
+  .sign-up__block__form {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: 500;
+	margin-bottom: 12px;
+  }
+  
+  .form::placeholder {
+	color: #bfbfbf;
+  }
+
+  .sign-up__block__checkbox {
+	display: flex;
+	margin: 10px 0px 10px 0px;
+  }
+
+  .checkbox {
+	  margin: 5px 12px 0px 0px;
+  }
+  
+  .sign-up__block__button {
+	background: #1890ff;
+	border: 0px;
+	height: 40px;
+	color: #ffffff;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 24px;
+  }
+  
+  .sign-up__block__footer {
+	align-self: center;
+	font-size: 12px;
+	line-height: 20px;
+	color: #8c8c8c;
+	justify-self:flex-end;
+  }
+  
+  .input-errors {
+	  line-height: 22px;
+	  size: 14px;
+	  margin-top: 2px;
+	  color: #F5222D;
+  }
+
+    
+  .form {
+	border: 1px solid #d9d9d9;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 24px;
+	height: 40px;
+	padding: 8px 12px;
+	margin-bottom: 0px !important
+  }

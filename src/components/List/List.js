@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Pagination } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Spin, Pagination } from 'antd';
 import 'antd/dist/antd.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useParams } from 'react-router-dom';
@@ -9,33 +9,29 @@ import './List.scss';
 
 function List() {
   const [paginationCurrent, setPaginationCurrent] = useState(1);
-  console.log(paginationCurrent);
   const { loading, articlesList, articlesCount } = useSelector((state) => state);
   const dispatch = useDispatch();
   let postId = 0;
-  console.log(loading, articlesList, articlesCount, Object.keys({}).length);
 
-  return (
-    <>
-      <ul className="list">
-        {loading ? articlesList : articlesList.map((el) => {
-          postId += 1;
-          return <ListPost key={postId} data={el} />;
-        })}
-      </ul>
-      <Pagination
-        defaultPageSize={5}
-        defaultCurrent="1"
-        current={paginationCurrent}
-        total={articlesCount}
-        onChange={(page, pageSize) => {
-          console.log(page);
-          setPaginationCurrent(+page);
-          return dispatch(getAticles((page * pageSize) - pageSize));
-        }}
-      />
-    </>
-  );
+  useEffect(() => dispatch(getAticles((paginationCurrent * 5) - 5)), [dispatch, paginationCurrent]);
+
+  return loading
+    ? <Spin className="card-spinner" tip="Loading..." size="large" /> : (
+      <>
+        <ul className="list">
+          {loading ? articlesList : articlesList.map((el) => {
+            postId += 1;
+            return <ListPost key={postId} data={el} />;
+          })}
+        </ul>
+        <Pagination
+          defaultPageSize={5}
+          current={paginationCurrent}
+          total={articlesCount}
+          onChange={(page) => setPaginationCurrent(page)}
+        />
+      </>
+    );
 }
 
-export default List;
+export default React.memo(List);

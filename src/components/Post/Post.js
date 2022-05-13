@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Tag } from 'antd';
 import Icon, { HeartOutlined } from '@ant-design/icons';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import 'antd/dist/antd.min.css';
 import format from 'date-fns/format';
-import { getAticlesSlug, cleareAticlesSlug } from '../../redux/actions';
+import { getAticlesSlug, likes } from '../../redux/actions';
 import './Post.scss';
+import isDeleteIcon from './isDeleteIcon.svg';
 
 function HeartSvg() {
   return (
@@ -22,17 +23,39 @@ function HeartIcon(props) {
 function Post() {
   const dispatch = useDispatch();
   const { slug } = useParams();
-  const { page, loading } = useSelector((state) => state);
-  useEffect(() => {
-    if (!Object.keys(page).length) dispatch(getAticlesSlug(slug));
-    return () => dispatch(cleareAticlesSlug());
-  }, [slug]);
-  const [onLike, setOnLike] = useState(false);
+  const navigate = useNavigate();
+  const [isDelete, setIsDelete] = useState(false);
+  const { page, authenticationInfo, isAuthentication } = useSelector((state) => state);
+  useEffect(() => dispatch(getAticlesSlug(slug)), [slug]);
   const data = page;
-  console.log(loading, page, slug, data);
+
+  const fetchs = async (url, method, to = null) => {
+    try {
+      console.log('fewfew');
+      const res = await fetch(`https://kata.academy:8021/api/articles/${url}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${document.cookie.split(' ')[0].slice(5)}`,
+        },
+      });
+      console.log(res, !res.ok);
+      if (!res.ok) {
+        throw new Error(`Could not fetch articles , received ${res.status}`);
+      }
+      const result = await res.json();
+      console.log(result, result.article.favoritesCount, result.article.favorited);
+
+      if (to) navigate(to);
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+  };
+  // fetchs(slug, 'DELETE', '/')
+  // fetchs(`${slug}/favorite`, 'POST')
   let tagId = 10000;
   const createDate = Object.keys(page).length ? format(new Date(data.createdAt), 'MMMM d, yyyy') : '';
-  const likeCount = data.favoritesCount || '';
 
   return (Object.keys(page).length
     ? (
@@ -47,9 +70,11 @@ function Post() {
                 {data.title}
               </Link>
               <div className="post__body__header__likes">
-                {onLike ? <HeartIcon onClick={() => setOnLike(false)} />
-                  : <HeartOutlined onClick={() => setOnLike(true)} />}
-                <p>{onLike ? likeCount + 1 : likeCount}</p>
+                {'' || data?.favorited ? (
+                  <HeartIcon onClick={() => (isAuthentication === 'null' ? null : dispatch(likes(slug, 'DELETE')))} />
+                )
+                  : <HeartOutlined onClick={() => (isAuthentication === 'null' ? null : dispatch(likes(slug, 'POST')))} />}
+                <p>{'' || data.favoritesCount}</p>
               </div>
             </div>
             <div
@@ -62,16 +87,62 @@ function Post() {
             </div>
             <p className="post__body__description">{data.description}</p>
           </div>
-          <div className="post-info">
-            <section className="post__info__text">
-              <p className="post__info__text__user-name">{data.author.username}</p>
-              <p className="post__info__text__created-at">{createDate}</p>
-            </section>
-            <img
-              alt="icon"
-              className="post__info__image"
-              src={data.author.image}
-            />
+          <div className="post-info__box">
+            <div className="post-info">
+              <section className="post__info__text">
+                <p className="post__info__text__user-name">{data?.author?.username}</p>
+                <p className="post__info__text__created-at">{createDate}</p>
+              </section>
+              <img
+                alt="icon"
+                className="post__info__image"
+                src={data.author.image}
+              />
+            </div>
+            {authenticationInfo?.user?.username !== data?.author?.username ? null : (
+              <div className="post__button">
+                <button
+                  type="button"
+                  className="post__button__delete"
+                  onClick={() => setIsDelete(true)}
+                >
+                  Delete
+                </button>
+                {isDelete
+                  ? (
+                    <div className="post__is-delete__block">
+                      <div className="post__is-delete__text__block">
+                        <img src={isDeleteIcon} alt="isDeleteIcon" />
+                        <p className="post__is-delete__text">Are you sure to delete this article?</p>
+                      </div>
+                      <div className="post__is-delete__button__block">
+                        <button
+                          type="button"
+                          className="post__is-delete__no"
+                          onClick={() => setIsDelete(false)}
+                        >
+                          No
+                        </button>
+                        <button
+                          type="button"
+                          className="post__is-delete__yes"
+                          onClick={() => fetchs(slug, 'DELETE', '/')}
+                        >
+                          Yes
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="post__button__edit"
+                      onClick={() => navigate(`/articles/${slug}/edit`)}
+                    >
+                      Edit
+                    </button>
+                  )}
+              </div>
+            )}
           </div>
         </section>
         <p className="post__footer">{data.body}</p>

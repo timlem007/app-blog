@@ -42,6 +42,9 @@
       "react/static-property-placement": "off",
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "react/jsx-uses-react": "error",   
-      "react/jsx-uses-vars": "error"
+      "react/jsx-uses-vars": "error",
+      "react-hooks/exhaustive-deps": ["warn", {
+        "additionalHooks": "useDispatch|useOtherHookWhichWillDefinitelyNotChange"
+      }]
     }
 }

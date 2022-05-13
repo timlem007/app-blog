@@ -1,3 +1,3 @@
-import SignUp from './Sign-up';
+import EditProfile from './Edit-profile';
 
-export default SignUp;
+export default EditProfile;

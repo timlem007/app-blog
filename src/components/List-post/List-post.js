@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tag } from 'antd';
 import Icon, { HeartOutlined } from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import 'antd/dist/antd.min.css';
 import format from 'date-fns/format';
+import { likes } from '../../redux/actions';
+import 'antd/dist/antd.min.css';
 import './List-post.scss';
 
 function HeartSvg() {
@@ -18,12 +20,11 @@ function HeartIcon(props) {
 }
 
 function ListPost({ data }) {
-  const [onLike, setOnLike] = useState(false);
+  const { isAuthentication } = useSelector((state) => state);
   let tagId = 10000;
+  const dispatch = useDispatch();
   const createDate = format(new Date(data.createdAt), 'MMMM d, yyyy');
-  const likeCount = data.favoritesCount;
-  // const { pages } = useParams();
-  // console.log(pages);
+  console.log(data);
 
   return (
     <li className="list__post">
@@ -36,18 +37,20 @@ function ListPost({ data }) {
             {data.title}
           </Link>
           <div className="list__post__body__header__likes">
-            {onLike ? <HeartIcon onClick={() => setOnLike(false)} />
-              : <HeartOutlined onClick={() => setOnLike(true)} />}
-            <p>{onLike ? likeCount + 1 : likeCount}</p>
+            {'' || data?.favorited ? (
+              <HeartIcon onClick={() => (isAuthentication === 'null' ? null : dispatch(likes(data.slug, 'DELETE')))} />
+            )
+              : <HeartOutlined onClick={() => (isAuthentication === 'null' ? null : dispatch(likes(data.slug, 'POST')))} />}
+            <p>{'' || data.favoritesCount}</p>
           </div>
         </div>
         <div
           className="list__post__body__tags"
         >
-          {data.tagList.map((element) => {
+          {data.tagList ? data.tagList.map((element) => {
             tagId += 1;
             return <Tag key={tagId}>{element}</Tag>;
-          })}
+          }) : null}
         </div>
         <p className="list__post__body__description">{data.body}</p>
       </section>

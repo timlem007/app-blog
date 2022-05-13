@@ -1,45 +1,25 @@
-import React, { useEffect } from 'react';
-import { Spin } from 'antd';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAticles } from '../../redux/actions';
 import './App.scss';
 
 // import Info from '../../Service';
 import Header from '../Header';
 import List from '../List';
 import SignIn from '../Sign-in';
-import SignUp from '../Sign-up';
+import CreateAccount from '../Create-account';
+import EditProfile from '../Edit-profile';
 import Post from '../Post';
+import CreatArticle from '../Create-article';
+import EditArticle from '../Edit-article';
 // import ListPost from '../List-post';
 
 function App() {
-  const { loading } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  // const [listInfo, setListInfo] = useState({});
-  // const [loading, setLoading] = useState(true);
-  // const data = new Info();
-  // const getArticlesList = (number) => {
-  //   setLoading(true);
-  //   return data.getAticles(number).then((res) => {
-  //     setListInfo(res);
-  //     // console.log(res);
-  //     setLoading(false);
-  //   });
-  // };
-
-  // useEffect(() => getArticlesList(), []);
-  useEffect(() => dispatch(getAticles()), []);
-
   return (
     <Routes>
       <Route path="/" element={<Header />}>
         <Route
           index
-          element={(loading
-            ? <Spin className="card-spinner" tip="Loading..." size="large" />
-            : <List />
-        )}
+          element={<List />}
         />
         <Route
           path="sign-in"
@@ -47,25 +27,31 @@ function App() {
         />
         <Route
           path="sign-up"
-          element={<SignUp />}
+          element={<CreateAccount />}
         />
         <Route
           path="articles"
-          element={(loading
-            ? <Spin className="card-spinner" tip="Loading..." size="large" />
-            : <List />
-        )}
+          element={<List />}
         />
         <Route
           path="articles/:slug"
-          element={(loading
-            ? <Spin className="card-spinner" tip="Loading..." size="large" />
-            : <Post />
-        )}
+          element={<Post />}
+        />
+        <Route
+          path="profile"
+          element={<EditProfile />}
+        />
+        <Route
+          path="new-article"
+          element={<CreatArticle />}
+        />
+        <Route
+          path="articles/:slug/edit"
+          element={<EditArticle />}
         />
       </Route>
     </Routes>
   );
 }
 
-export default App;
+export default React.memo(App);
